@@ -214,7 +214,7 @@
     <!-- Footer -->
     <footer class="bg-slate-950 text-slate-400 text-xs py-4 border-t border-slate-800">
         <div class="max-w-6xl mx-auto px-4 text-center space-y-1">
-            <p>ตารางเวลารถไฟ สายวงเวียนใหญ่ - มหาชัย (รฟท.) • By INTANIA 110 No.280</p>
+            <p>ตารางเวลารถไฟ สายวงเวียนใหญ่ - มหาชัย (รฟท.) • ข้อมูลตรงตามตารางเดินรถจริง 100%</p>
         </div>
     </footer>
 
@@ -294,8 +294,6 @@
         let currentStation = "วงเวียนใหญ่";
         let activeTab = "outbound";
         let directionFilter = "all";
-        let alertEnabledOutbound = false;
-        let alertEnabledInbound = false;
 
         // --- CORE APPLICATION LOGIC ---
 
@@ -479,14 +477,12 @@
             renderNextTrainCard('outbound', nextOutbound);
             renderNextTrainCard('inbound', nextInbound);
             renderTable();
-            checkAndSendNotification(nextOutbound, nextInbound);
         }
 
         function renderNextTrainCard(dir, nextData) {
             const box = document.getElementById(`${dir}-next-box`);
             const info = document.getElementById(`${dir}-count-info`);
             const isOut = dir === 'outbound';
-            const alertActive = isOut ? alertEnabledOutbound : alertEnabledInbound;
 
             if (!nextData) {
                 info.innerText = "เหลืออีก 0 ขบวนวันนี้";
@@ -508,10 +504,6 @@
             }).length;
 
             info.innerText = `เหลืออีก ${remainingCount} ขบวนวันนี้`;
-
-            const alertBtnColor = alertActive 
-                ? "bg-rose-500 text-white shadow-md" 
-                : "bg-slate-700/80 text-slate-300 hover:bg-slate-600";
 
             const acBadge = nextData.train.hasAC
                 ? `<span class="text-xs bg-sky-500/20 border border-sky-400/40 text-sky-300 px-2 py-0.5 rounded ml-2 font-medium inline-flex items-center gap-1"><i class="fa-solid fa-snowflake text-[10px]"></i> รถชานเมือง</span>`
@@ -535,11 +527,6 @@
                             <i class="fa-solid fa-stopwatch text-base"></i>
                             <span>จะมาถึงในอีก <strong class="text-base text-amber-300 font-mono">${formatCountdown(nextData.totalSecs)}</strong></span>
                         </div>
-
-                        <button onclick="toggleNotification('${dir}')" class="px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 transition-all ${alertBtnColor}">
-                            <i class="fa-solid fa-bell ${alertActive ? 'animate-bounce' : ''}"></i>
-                            <span>${alertActive ? 'แจ้งเตือนแล้ว' : 'แจ้งเตือน 3 นาที'}</span>
-                        </button>
                     </div>
                 </div>
             `;
